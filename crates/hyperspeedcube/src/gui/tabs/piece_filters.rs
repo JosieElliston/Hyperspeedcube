@@ -762,6 +762,7 @@ fn show_current_filter_preset_ui_contents(
             }
 
             ui.horizontal_wrapped(|ui| {
+                ui.label(L.piece_filters.add_rule_with);
                 if ui.button(L.piece_filters.add_checkboxes_rule).clicked() {
                     changed = true;
                     current.inner.rules.push(FilterRule::new_checkboxes());

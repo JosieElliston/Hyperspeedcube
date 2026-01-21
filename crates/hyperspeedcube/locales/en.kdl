@@ -671,8 +671,9 @@ piece_filters {
   n_override_previous_rule "(**{{n}}** pieces override a previous rule)"
   convert_to_text_rule "Convert to text rule"
   delete_rule "Delete rule"
-  add_checkboxes_rule "Add filter rule using checkboxes"
-  add_text_rule "Add filter rule using text"
+  add_rule_with "Add rule with"
+  add_checkboxes_rule "checkboxes"
+  add_text_rule "text"
 
   colors "Colors"
   piece_types "Piece types"
