@@ -249,8 +249,8 @@ presets {
   }
   (PresetStrings)piece_filters {
     saved_presets "Filter presets"
-    current "{{current}} piece filters"
-    current_empty "Ad-hoc piece filters"
+    current "**{{current}}** piece filters"
+    current_empty "Ad-hoc"
     (PresetActions)actions {
       add "Add filter preset"
       add_all_builtin "Add all built-in filter presets"

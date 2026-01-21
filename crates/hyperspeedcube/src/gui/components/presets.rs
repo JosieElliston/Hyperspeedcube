@@ -556,14 +556,15 @@ where
                     crate::gui::components::HelpHoverWidget::show(ui, help_contents);
                 }
 
-                let markdown: Cow<'_, str> = if self.preset_name.is_empty() {
-                    self.text.current_empty.into()
-                } else {
-                    self.text
-                        .current
-                        .with(&md_bold_user_text(self.preset_name))
-                        .into()
-                };
+                let markdown: Cow<'_, str> = self
+                    .text
+                    .current
+                    .with(if self.preset_name.is_empty() {
+                        self.text.current_empty
+                    } else {
+                        self.preset_name
+                    })
+                    .into();
                 crate::gui::util::label_centered_unless_multiline(ui, md_inline(ui, markdown));
             });
         })
