@@ -66,7 +66,7 @@ pub fn show(ui: &mut egui::Ui, app: &mut App) {
                         .show(ui, |ui| show_current_filter_preset_ui(ui, app, false));
                 }
                 FiltersTab::PresetsList => {
-                    show_filter_presets_list_ui(ui, app, false);
+                    show_filter_presets_list_ui(ui, app);
                 }
                 FiltersTab::EditPresets => {
                     let h = ui.available_height();
@@ -74,7 +74,7 @@ pub fn show(ui: &mut egui::Ui, app: &mut App) {
                         ui.set_height(h);
                         ui.vertical(|ui| {
                             ui.set_width(PRESET_LIST_MIN_WIDTH);
-                            show_filter_presets_list_ui(ui, app, true);
+                            show_filter_presets_list_ui(ui, app);
                         });
                         ui.add(egui::Separator::default().grow(6.0));
                         ui.vertical(|ui| {
@@ -89,7 +89,7 @@ pub fn show(ui: &mut egui::Ui, app: &mut App) {
     });
 }
 
-fn show_filter_presets_list_ui(ui: &mut egui::Ui, app: &mut App, allow_ad_hoc: bool) {
+fn show_filter_presets_list_ui(ui: &mut egui::Ui, app: &mut App) {
     let mut changed = false;
 
     let fallback_style = app.prefs.first_custom_style();
@@ -98,7 +98,8 @@ fn show_filter_presets_list_ui(ui: &mut egui::Ui, app: &mut App, allow_ad_hoc: b
         egui::ScrollArea::vertical()
             .id_salt("filter_presets_list")
             .show(ui, |ui| {
-                let ad_hoc_rect = allow_ad_hoc.then(|| reserve_space_for_ad_hoc_preset_name(ui));
+                // TODO: maybe we don't need this now that we're drawing it unconditionally
+                let ad_hoc_rect = reserve_space_for_ad_hoc_preset_name(ui);
 
                 if let Some(view) = view {
                     let puz = view.puzzle();
@@ -111,8 +112,8 @@ fn show_filter_presets_list_ui(ui: &mut egui::Ui, app: &mut App, allow_ad_hoc: b
                         &mut changed,
                         fallback_style,
                     );
-                    if let Some(rect) = ad_hoc_rect
-                        && show_ad_hoc_preset_name(ui, rect, &view.filters.base).clicked()
+                    if show_ad_hoc_preset_name(ui, ad_hoc_rect, view.filters.base.is_none())
+                        .clicked()
                     {
                         view.filters.load_preset(filter_prefs, None);
                     }
@@ -129,9 +130,7 @@ fn show_filter_presets_list_ui(ui: &mut egui::Ui, app: &mut App, allow_ad_hoc: b
                         &mut false,
                         fallback_style,
                     );
-                    if let Some(rect) = ad_hoc_rect {
-                        show_ad_hoc_preset_name(ui, rect, &None);
-                    }
+                    show_ad_hoc_preset_name(ui, ad_hoc_rect, false);
                 }
             });
     });
@@ -510,16 +509,12 @@ fn reserve_space_for_ad_hoc_preset_name(ui: &mut egui::Ui) -> egui::Rect {
     .rect
 }
 
-fn show_ad_hoc_preset_name(
-    ui: &mut egui::Ui,
-    rect: egui::Rect,
-    current: &Option<FilterPresetRef>,
-) -> egui::Response {
+fn show_ad_hoc_preset_name(ui: &mut egui::Ui, rect: egui::Rect, checked: bool) -> egui::Response {
     let rect = egui::Rect::from_x_y_ranges(ui.max_rect().x_range(), rect.y_range());
     ui.scope_builder(egui::UiBuilder::new().max_rect(rect), |ui| {
         let r = ui
             .with_layout(egui::Layout::top_down_justified(egui::Align::LEFT), |ui| {
-                ui.selectable_label(current.is_none(), L.piece_filters.tabs.ad_hoc)
+                ui.selectable_label(checked, L.piece_filters.tabs.ad_hoc)
             })
             .inner;
         ui.separator();
