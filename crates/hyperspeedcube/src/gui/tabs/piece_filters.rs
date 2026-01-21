@@ -1,6 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
 
+use egui::Button;
 use hcegui::reorder::Dnd;
 use hyperprefs::{
     ColorScheme, FilterCheckboxes, FilterExpr, FilterPieceSet, FilterPreset, FilterPresetName,
@@ -250,6 +251,7 @@ fn show_filter_presets_list_ui_contents(
         seq_dnd.reorderable_with_handle(ui, seq_name.clone(), |ui, _| {
             let r = egui::CollapsingHeader::new(&seq_name)
                 .id_salt(seq_ptr)
+                // .show_background(true)
                 .open(
                     is_any_dragging
                         .then_some(false)
@@ -536,7 +538,49 @@ fn show_preset_name(
 
     let is_active = current.as_ref().is_some_and(|r| r.name() == name);
 
-    let r = ui.selectable_label(is_active, &name.preset);
+    // i want the hover hitbox to be bigger than the visual hitbox
+    // right now i just extend both
+
+    // ui.scope_builder(egui::UiBuilder::new().sizing_pass().invisible(), |ui| {
+    //     let _ = ui.selectable_label(false, "");
+    //     ui.separator();
+    // })
+    // .response
+    // .rect
+
+    // let outer = ui
+    //     .scope_builder(egui::UiBuilder::new().sizing_pass().invisible(), |ui| {
+    //         // let _ = ui.selectable_label(false, "");
+    //         let _ =
+    //             ui.add(Button::selectable(false, "").min_size(egui::Vec2 { x: 200.0, y: 0.0 }));
+    //     })
+    //     .response;
+
+    // let r = ui.allocate_ui(desired_size, |ui| {let r = ui.selectable_label(is_active, &name.preset);});
+
+    // let _ = ui.add(Button::selectable(is_active, &name.preset).frame(outer.hovered()));
+    // let asdf = ui.add(Button::selectable(is_active, &name.preset));
+    // if outer.hovered() {
+    //     asdf.highlight();
+    // }
+
+    let r = ui
+        .with_layout(
+            egui::Layout::from_main_dir_and_cross_align(
+                egui::Direction::TopDown,
+                egui::Align::LEFT,
+            ),
+            |ui| {
+                let width = ui.available_width();
+                ui.add(
+                    Button::selectable(is_active, &name.preset)
+                        .min_size(egui::Vec2 { x: width, y: 0.0 }),
+                )
+            },
+        )
+        .inner;
+
+    // let r = ui.selectable_label(is_active, &name.preset);
 
     let r = r.on_hover_ui(|ui| {
         md(ui, L.click_to.activate.with(L.inputs.click));
