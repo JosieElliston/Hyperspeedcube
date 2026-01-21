@@ -66,7 +66,6 @@ pub fn show(ui: &mut egui::Ui, app: &mut App) {
                         .show(ui, |ui| show_current_filter_preset_ui(ui, app, false));
                 }
                 FiltersTab::PresetsList => {
-                    ui.set_min_width(PRESET_LIST_MIN_WIDTH);
                     show_filter_presets_list_ui(ui, app, false);
                 }
                 FiltersTab::EditPresets => {
