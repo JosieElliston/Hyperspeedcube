@@ -104,6 +104,7 @@ impl egui::Widget for FilterCheckbox<'_> {
         let text_width = galley.size().x;
         width += text_width;
         let height = f32::max(icon_width, galley.size().y);
+        width = width.at_least(ui.max_rect().width());
 
         let desired_size = if self.color.is_none() && text_is_empty {
             egui::Vec2::new(width, icon_width)
