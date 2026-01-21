@@ -92,14 +92,27 @@ impl CatalogIcon {
     const EXPERIMENTAL: Self = svg_catalog_icon!("test-tube", "Experimental", Right, "#1aeb8a");
     const BIG: Self = svg_catalog_icon!("alert", "Big/slow to generate", Right, Warn);
 
-    const NDIM_1D: Self = svg_catalog_icon!("1d", "1D", Right);
-    const NDIM_2D: Self = svg_catalog_icon!("2d", "2D", Right);
-    const NDIM_3D: Self = svg_catalog_icon!("3d", "3D", Right);
-    const NDIM_4D: Self = svg_catalog_icon!("4d", "4D", Right);
-    const NDIM_5D: Self = svg_catalog_icon!("5d", "5D", Right);
-    const NDIM_6D: Self = svg_catalog_icon!("6d", "6D", Right);
-    const NDIM_7D: Self = svg_catalog_icon!("7d", "7D", Right);
-    const NDIM_8D: Self = svg_catalog_icon!("8d", "8D", Right);
+    // something like one of the two new colors of the hypercube in each dimension
+    // we especially want 3d, 4d, and 5d to be distinguishable
+    // here's what flat hypercube uses
+    // red        | rgb(255, 0, 0)     | orange | rgb(255, 128, 0)
+    // white      | rgb(255, 255, 255) | yellow | rgb(255, 255, 0)
+    // green      | rgb(0, 255, 0)     | blue   | rgb(0, 128, 255)
+    // pink       | rgb(255, 0, 255)   | purple | rgb(143, 16, 234)
+    // teal       | rgb(10, 170, 133)  | olive  | rgb(125, 170, 10)
+    // brown      | rgb(119, 72, 17)   | mauve  | rgb(109, 69, 100)
+    // light pink | rgb(244, 159, 239) | gold   | rgb(212, 169, 78)
+    // tan        | rgb(178, 152, 103) | rose   | rgb(178, 121, 103)
+    // lime       | rgb(156, 245, 66)  | cyan   | rgb(66, 212, 245)
+    // dark green | rgb(7, 133, 23)    | indigo | rgb(47, 47, 189)
+    const NDIM_1D: Self = svg_catalog_icon!("1d", "1D", Right, "#ff0000"); // red
+    const NDIM_2D: Self = svg_catalog_icon!("2d", "2D", Right, "#ffff00"); // yellow
+    const NDIM_3D: Self = svg_catalog_icon!("3d", "3D", Right, "#009dff"); // blue
+    const NDIM_4D: Self = svg_catalog_icon!("4d", "4D", Right, "#ff6cff"); // pink
+    const NDIM_5D: Self = svg_catalog_icon!("5d", "5D", Right, "#9f9f9f"); // grey
+    const NDIM_6D: Self = svg_catalog_icon!("6d", "6D", Right, "#2fd7fc"); // cyan
+    const NDIM_7D: Self = svg_catalog_icon!("7d", "7D", Right, "#ffc0fb"); // light pink
+    const NDIM_8D: Self = svg_catalog_icon!("8d", "8D", Right, "#774811"); // brown
 
     pub fn icons_from_tags(tags: &hyperpuzzle::TagSet) -> Vec<CatalogIcon> {
         let mut ret = vec![];
