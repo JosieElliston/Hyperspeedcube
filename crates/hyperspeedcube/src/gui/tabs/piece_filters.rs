@@ -699,6 +699,7 @@ fn show_current_filter_preset_ui_contents(
                             ));
                             changed |= r.changed();
                         });
+                        // all previous rules, not just the immediate predecessor
                         let previous_rule_piece_count = these_pieces.len() - affected_piece_count;
                         {
                             // TODO: singular vs. plural
@@ -778,7 +779,13 @@ fn show_current_filter_preset_ui_contents(
             if view.filters.base.as_ref().is_some_and(|r| r.seq.is_some()) {
                 let r = ui.checkbox(
                     &mut current.include_previous,
-                    L.piece_filters.show_remaining_pieces_with_previous_filter,
+                    md_inline(
+                        ui,
+                        // TODO: singular vs. plural
+                        L.piece_filters
+                            .show_n_remaining_pieces_with_previous_filter
+                            .with(&remaining_pieces.len().to_string()),
+                    ),
                 );
                 if r.clicked() {
                     changed = true;
@@ -797,7 +804,13 @@ fn show_current_filter_preset_ui_contents(
             }
             ui.scope_builder(ui_builder, |ui| {
                 ui.horizontal(|ui| {
-                    ui.label(L.piece_filters.show_remaining_pieces_with_style);
+                    ui.label(md_inline(
+                        ui,
+                        // TODO: singular vs. plural
+                        L.piece_filters
+                            .show_n_remaining_pieces_with_style
+                            .with(&remaining_pieces.len().to_string()),
+                    ));
                     let r = ui.add(FancyComboBox {
                         combo_box: egui::ComboBox::from_id_salt(unique_id!()),
                         selected: &mut current.inner.fallback_style,
