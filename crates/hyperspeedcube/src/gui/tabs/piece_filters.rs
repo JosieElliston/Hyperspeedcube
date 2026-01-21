@@ -698,6 +698,11 @@ fn show_current_filter_preset_ui_contents(
                                 &style_options,
                             ));
                             changed |= r.changed();
+
+                            ui.add_space(ui.spacing().item_spacing.y * 2.0);
+                            if ui.button(L.piece_filters.delete_rule).clicked() {
+                                to_delete = Some(i);
+                            }
                         });
                         // all previous rules, not just the immediate predecessor
                         let previous_rule_piece_count = these_pieces.len() - affected_piece_count;
@@ -741,10 +746,6 @@ fn show_current_filter_preset_ui_contents(
                                     }
                                 });
                             }
-                        }
-
-                        if ui.button(L.piece_filters.delete_rule).clicked() {
-                            to_delete = Some(i);
                         }
 
                         ui.add_space(ui.spacing().item_spacing.y * 2.0);
