@@ -654,6 +654,7 @@ fn show_current_filter_preset_ui_contents(
     for style in prefs.filter_styles.user_presets() {
         style_options.push((Some(style.new_ref()), style.name().to_owned().into()));
     }
+    let style_options = style_options;
 
     let puz = view.puzzle();
     let filter_prefs = prefs.filters_mut(&puz);
@@ -730,8 +731,9 @@ fn show_current_filter_preset_ui_contents(
                             );
                             changed |= r.changed();
 
+                            // salting with style_options.len() probably leaks memory
                             let r = &ui.add(FancyComboBox::new(
-                                unique_id!(i),
+                                unique_id!(i, style_options.len()),
                                 &mut rule.style,
                                 &style_options,
                             ));
@@ -850,11 +852,12 @@ fn show_current_filter_preset_ui_contents(
                             .show_n_remaining_pieces_with_style
                             .with(&remaining_pieces.len().to_string()),
                     ));
-                    let r = ui.add(FancyComboBox {
-                        combo_box: egui::ComboBox::from_id_salt(unique_id!()),
-                        selected: &mut current.inner.fallback_style,
-                        options: style_options.clone(),
-                    });
+                    // salting with style_options.len() probably leaks memory
+                    let r = ui.add(FancyComboBox::new(
+                        unique_id!(style_options.len()),
+                        &mut current.inner.fallback_style,
+                        &style_options,
+                    ));
                     changed |= r.changed();
                 });
             });

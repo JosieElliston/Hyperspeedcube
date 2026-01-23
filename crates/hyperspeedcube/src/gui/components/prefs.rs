@@ -293,11 +293,9 @@ impl<T> PrefsUi<'_, T> {
                             options.push((option, l.rainbow.into()));
                         }
 
-                        let r = ui.add(crate::gui::components::FancyComboBox {
-                            combo_box: egui::ComboBox::from_id_salt(id),
-                            selected: value,
-                            options,
-                        });
+                        let r = ui.add(crate::gui::components::FancyComboBox::new(
+                            id, value, options,
+                        ));
                         changed |= r.changed();
 
                         if let Some(StyleColorMode::FixedColor { color }) = value {

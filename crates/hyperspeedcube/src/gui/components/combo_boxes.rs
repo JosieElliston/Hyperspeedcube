@@ -79,6 +79,9 @@ impl<T: Clone + PartialEq> egui::Widget for FancyComboBox<'_, T> {
 
         let mut r = self
             .combo_box
+            // with how the scroll area remembers where you've scrolled to,
+            // this isn't worth it
+            // .height(ui.ctx().available_rect().height())
             .selected_text(selected_text)
             .width_to_fit(ui, self.options.iter().map(|(_, string)| string.as_ref()))
             .show_ui(ui, |ui| {
