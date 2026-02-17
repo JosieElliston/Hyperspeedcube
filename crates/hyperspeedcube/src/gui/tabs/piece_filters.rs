@@ -24,8 +24,6 @@ use crate::gui::markdown::{md, md_inline};
 use crate::gui::util::{EguiTempValue, text_width};
 
 const PRESET_LIST_MIN_WIDTH: f32 = 200.0;
-// TODO: remove
-const CURRENT_PRESET_MIN_WIDTH: f32 = 350.0;
 
 // TODO: factor out this (and `ColorsTab` and `DevToolsTab`)
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq, Hash)]
@@ -650,9 +648,6 @@ fn show_current_filter_preset_ui_contents(
     view: &mut PuzzleView,
     show_header_row: bool,
 ) {
-    // TODO: remove
-    ui.set_min_width(CURRENT_PRESET_MIN_WIDTH);
-
     let mut style_options = vec![(None, crate::DEFAULT_STYLE_NAME.into())];
     for style in prefs.filter_styles.user_presets() {
         style_options.push((Some(style.new_ref()), style.name().to_owned().into()));
@@ -742,27 +737,19 @@ fn show_current_filter_preset_ui_contents(
                             ));
                             changed |= r.changed();
 
-                            ui.add_space(ui.spacing().item_spacing.y * 2.0);
-                            if ui
-                                .button("🗑")
-                                .on_hover_text(L.piece_filters.delete_rule)
-                                .clicked()
-                            {
-                                to_delete = Some(i);
-                            }
-                            // TODO: fix horizontal spacing, look at ? button code
-                            // ui.with_layout(
-                            //     egui::Layout::right_to_left(egui::Align::Center),
-                            //     |ui| {
-                            //         if ui
-                            //             .button("🗑")
-                            //             .on_hover_text(L.piece_filters.delete_rule)
-                            //             .clicked()
-                            //         {
-                            //             to_delete = Some(i);
-                            //         }
-                            //     },
-                            // );
+                            ui.add_space(ui.spacing().item_spacing.x * 2.0);
+                            ui.with_layout(
+                                egui::Layout::right_to_left(egui::Align::Center),
+                                |ui| {
+                                    if ui
+                                        .button("🗑")
+                                        .on_hover_text(L.piece_filters.delete_rule)
+                                        .clicked()
+                                    {
+                                        to_delete = Some(i);
+                                    }
+                                },
+                            );
                         });
                         // all previous rules, not just the immediate predecessor
                         let previous_rule_piece_count = these_pieces.len() - affected_piece_count;
@@ -783,8 +770,6 @@ fn show_current_filter_preset_ui_contents(
                             }
                             FilterPieceSet::Checkboxes(checkboxes) => {
                                 let expr_string = checkboxes.to_string(&*puz);
-                                // TODO: the current problem is that uncollapsing this header gives a horizontal scroll bar
-                                // the next step is to get back to a state where it doesn't
                                 let r = egui::CollapsingHeader::new(&expr_string)
                                     .id_salt(unique_id!(i))
                                     // TODO: default open when created, but not when reordered
@@ -987,7 +972,6 @@ fn show_filter_checkboxes_ui(
         };
 
         if puzzle.colors.len() > 12 {
-            // TODO: the width here is broken
             egui::Frame {
                 stroke: egui::Stroke {
                     width: 1.0,
@@ -996,14 +980,13 @@ fn show_filter_checkboxes_ui(
                 inner_margin: egui::Margin::same(3),
                 ..Default::default()
             }
-            .show(ui, |ui| {
+            .show(ui, |ui: &mut egui::Ui| {
+                // TODO: make this vertically resizable
                 egui::ScrollArea::vertical()
                     .min_scrolled_height(300.0)
                     .max_height(100.0)
                     .show(ui, |ui| {
                         show_the_things(ui);
-                        // TODO: why
-                        ui.set_min_width(ui.min_rect().width() + 50.0);
                     });
             });
         } else {
