@@ -185,6 +185,7 @@ fn show_filter_presets_list_ui_contents(
         });
     }
 
+    // TODO: this button text wraps
     if ui.button(l.actions.add).clicked() {
         let desired_name = match &current.base {
             Some(r) => r.name().preset,
@@ -284,8 +285,12 @@ fn show_filter_presets_list_ui_contents(
                         is_first = false;
                     }
 
+                    // TODO: the current problem is that the eg ? are to far to the left in edit presets
+
                     ui.horizontal(|ui| {
+                        // TODO: i disagree with having spacing here
                         ui.add_space(ui.spacing().indent + ui.spacing().item_spacing.x + 29.0);
+                        // TODO: this button text doesn't wrap
                         if ui.button(l.actions.add).clicked() {
                             let desired_name = match &current.base {
                                 Some(r) => r.name().preset,
@@ -371,6 +376,7 @@ fn show_filter_presets_list_ui_contents(
             .collect(),
     ));
 
+    // TODO: this button text doesn't wrap
     if ui.button(l.actions.add).clicked() {
         let seq_name = make_unique_filter_sequence_name(&filter_prefs.sequences);
         let preset_name = "Step 1".to_owned();
